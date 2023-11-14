@@ -19,4 +19,12 @@ class SingleConnectionDataSourceTest {
         assertEquals(instance1 , instance2);
         assertEquals(instance2, instance3);
     }
+
+    @Test
+    void generateSchema() {
+        assertDoesNotThrow(()->{
+            SingleConnectionDataSource.getInstance().getConnection().createStatement()
+                    .executeQuery("SELECT * FROM customer, item, \"order\", order_item") ;
+        });
+    }
 }
