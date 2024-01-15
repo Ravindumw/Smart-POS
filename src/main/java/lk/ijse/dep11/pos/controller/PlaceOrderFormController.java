@@ -75,6 +75,17 @@ public class PlaceOrderFormController {
                     }
                 }
             });
+        txtQty.textProperty().addListener((ov, prevQty, curQty) -> {
+            Item selectedItem = cmbItemCode.getSelectionModel().getSelectedItem();
+//            btnSave.setDisable(true);
+//            if (cur.matches("\\d+")){
+//                if (Integer.parseInt(cur) <= selectedItem.getQty() && Integer.parseInt(cur) > 0){
+//                    btnSave.setDisable(false);
+//                }
+//            }
+            btnSave.setDisable(!(curQty.matches("\\d+") && Integer.parseInt(curQty) <= selectedItem.getQty()
+                    && Integer.parseInt(curQty) > 0));
+        });
         }
 
     private void newOrder() throws IOException{
