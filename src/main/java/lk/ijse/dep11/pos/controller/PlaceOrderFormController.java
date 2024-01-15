@@ -45,8 +45,7 @@ public class PlaceOrderFormController {
     public void initialize() throws IOException{
         lblDate.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         newOrder();
-        try {
-            cmbCustomerId.getItems().addAll(CustomerDataAccess.getAllCustomers());
+
             cmbCustomerId.getSelectionModel().selectedItemProperty().addListener((ov, prev,cur)->{
                 if (cur != null){
                     txtCustomerName.setText(cur.getName());
@@ -57,7 +56,7 @@ public class PlaceOrderFormController {
                     txtCustomerName.setDisable(true);
                 }
             });
-            cmbItemCode.getItems().addAll(ItemDataAccess.getAllItems());
+
             cmbItemCode.getSelectionModel().selectedItemProperty().addListener((ov, prev, cur)->{
                 if (cur != null){
                     txtDescription.setText(cur.getDescription());
@@ -76,14 +75,9 @@ public class PlaceOrderFormController {
                     }
                 }
             });
-        }catch (SQLException e) {
-            new Alert(Alert.AlertType.ERROR, "Failed to establish database connection, try later").show();
-            e.printStackTrace();
-            navigateToHome(null);
         }
-    }
 
-    private void newOrder(){
+    private void newOrder() throws IOException{
         for (TextField txt : new TextField[]{txtCustomerName, txtDescription, txtQty, txtQtyOnHand, txtUnitPrice}) {
             txt.clear();
             txt.setDisable(true);
@@ -94,6 +88,16 @@ public class PlaceOrderFormController {
         btnPlaceOrder.setDisable(true);
         cmbCustomerId.getSelectionModel().clearSelection();
         cmbItemCode.getSelectionModel().clearSelection();
+        try {
+            cmbCustomerId.getItems().clear();
+            cmbCustomerId.getItems().addAll(CustomerDataAccess.getAllCustomers());
+            cmbItemCode.getItems().clear();
+            cmbItemCode.getItems().addAll(ItemDataAccess.getAllItems());
+        }catch (SQLException e){
+            new Alert(Alert.AlertType.ERROR, "Failed to establish database connection, try later").show();
+            e.printStackTrace();
+            navigateToHome(null);
+        }
         Platform.runLater(cmbCustomerId::requestFocus);
     }
 
