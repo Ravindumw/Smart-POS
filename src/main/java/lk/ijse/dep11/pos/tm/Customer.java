@@ -12,4 +12,9 @@ public class Customer implements Serializable {
     private String id;
     private String name;
     private String address;
+
+    @Override
+    public String toString() {
+        return id;
+    }
 }
