@@ -83,7 +83,8 @@ public class ManageItemFormController {
         if (!isDataValid()) return;
 
         try {
-            Item item = new Item(txtCode.getText().strip(), txtDescription.getText().strip(), Integer.parseInt(txtQtyOnHand.getText()), new BigDecimal(txtUnitPrice.getText()).setScale(2));
+            Item item = new Item(txtCode.getText().strip(), txtDescription.getText().strip(),
+                    Integer.parseInt(txtQtyOnHand.getText()), new BigDecimal(txtUnitPrice.getText()).setScale(2));
 
             if (btnDelete.getText().equals("SAVE")){
                 if (ItemDataAccess.existsItem(item.getCode())){
