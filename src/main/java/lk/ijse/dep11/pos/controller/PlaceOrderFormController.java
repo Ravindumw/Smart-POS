@@ -23,11 +23,14 @@ import lk.ijse.dep11.pos.tm.Item;
 import lk.ijse.dep11.pos.tm.OrderItem;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+
+import static com.lowagie.text.pdf.PdfName.ca;
 
 public class PlaceOrderFormController {
     public AnchorPane root;
@@ -143,9 +146,16 @@ public class PlaceOrderFormController {
             tblOrderDetails.refresh();
             selectedItem.setQty(selectedItem.getQty() - Integer.parseInt(txtQty.getText()));
         }
-
         cmbItemCode.getSelectionModel().clearSelection();
         cmbItemCode.requestFocus();
+        calculateOrderTotal();
+    }
+
+    private void calculateOrderTotal(){
+        Optional<BigDecimal> orderTotal = tblOrderDetails.getItems().stream()
+                .map(OrderItem::getTotal)
+                .reduce(BigDecimal::add);
+        lblTotal.setText("Total: Rs. " + orderTotal.get().setScale(2));
     }
 
     public void txtQty_OnAction(ActionEvent actionEvent) {
